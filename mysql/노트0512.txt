@@ -1,0 +1,56 @@
+mysql 접속하는 방법
+1) cmd 창 띄우기 
+
+2) mysql 설치된 디렉토리로 간다
+
+3) 접속명령어 입력 
+   mysql   -h  원격지ip(도메인)  -u  root  -p
+   실습)  mysql  -h  localhost  -u  root -p
+
+ 데이터베이스 제품에서만 해석 및 실행될 수 있는 문법을 가
+ 리켜  쿼리문이라 한다 (Structured  Query  Language) SQL
+
+4) 최고 권한자인 root 에서  데이터베이스를 새로 구축하자 
+   create  database  testdb;
+
+5) 구축된 데이터베이스 들을 조회하기 
+   show  databases;   
+ 
+6) 생성된 testdb에 테이블을 생성해보자 
+   use  testdb; 사용할 데이터베이스 선택
+
+   oracle, mysql, mssql...제품들간 SQL 동일(ANSI SQL)
+
+   create  table  pet(
+      category varchar(20)
+     , age  int 
+     , loc varchar(20)
+   ) default  character set utf8;
+
+insert  into pet(category, age, loc)  values('tiger',5 , 'india');
+insert  into pet(category, age, loc)  values('cat', 4 , 'korea');
+insert  into pet(category, age, loc)  values('dog',2 , 'america');
+insert  into pet(category, age, loc)  values('horse', 3 , 'africa');
+
+7) 테이블 조회 
+   select  category, age , loc  from pet;
+   
+8) 레코드 수정하기 
+   update  pet  set category='호랑이'  where  category='tiger';
+   update  pet  set category='고양이'  where  category='cat';
+   update  pet  set category='개'  where  category='dog';
+   update  pet  set category='말'  where  category='horse';
+
+9) 수정된 레코드 확인 
+   select category ,age , loc from pet;
+
+10) 원하는 레코드 삭제 
+    delete from pet where category='개';
+
+    * 모든 컬럼을 의미
+    select * from pet;   
+
+
+
+
+

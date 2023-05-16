@@ -1,0 +1,149 @@
+SQL> --db ±¸Ãà ½Ç½À
+SQL> -- test¶ó´Â ÀÌ¸§ÀÇ µ¥ÀÌÅÍÆÄÀÏ ¹× db»ý¼º
+SQL> create  tablespace  testdb
+  2  datafile 'C:\oraclexe\app\oracle\oradata\XE/testdb.dbf'
+  3  size 5M;
+
+Tablespace created.
+
+SQL> --»ý¼ºµÈ db¿¡¼­ »ì¾Æ°¥ À¯Àú ¸¸µé±â
+SQL> create user java
+  2  identified by 1234
+  3  default  tablespace testdb
+  4  quota unlimited  on  testdb;
+
+User created.
+
+SQL> --»ý¼ºÇÑ À¯Àú°¡ ¿À¶óÅ¬ ¼­¹ö¿¡ Á¢¼ÓÇÒ¼ö ÀÖ¶Ç·Ï
+SQL> --Á¢¼Ó ±ÇÇÑÀ» ºÎ¿©ÇÏÀÚ
+SQL> grant create session to java;
+
+Grant succeeded.
+
+SQL> --ÀÌ¹Ì  sqlplus ¿¡ Á¢¼ÓÀÌ µÇ¾î ÀÕ´Â »óÅÂ¿¡¼­ ´Ù¸¥ À¯Àú·Î
+SQL> --Á¢¼ÓÀ» ÀüÈ¯ÇÏ´Â ¹æ¹ý
+SQL> show user
+USER is "SYSTEM"
+SQL> connect java/1234
+Connected.
+SQL> show user
+USER is "JAVA"
+SQL> -- Ç¥¸¦ ¸¸µéÀÚ
+SQL> create  table  test(
+  2  category varchar2(10)
+  3  );
+create  table  test(
+*
+ERROR at line 1:
+ORA-01031: insufficient privileges 
+
+
+SQL> show user
+USER is "JAVA"
+SQL>  connect system/1234
+Connected.
+SQL> --À¯Àú¿¡°Ô Å×ÀÌºí¿¡ ´ëÇÑ ¸ðµç ±ÇÇÑ ºÎ¿©ÇÏ±â
+SQL> grant create table to java;
+
+Grant succeeded.
+
+SQL> --´Ù½Ã ÀÏ¹Ý À¯Àú·Î Á¢¼Ó
+SQL> connect  java/1234
+Connected.
+SQL> edit
+Wrote file afiedt.buf
+
+  1  create  table  pet(
+  2      category  varchar2(10)
+  3    , age number
+  4    , loc  varchar2(10)  
+  5* )
+SQL> /
+
+Table created.
+
+SQL> -- »ý¼ºµÈ Å×ÀÌºí¿¡ µ¥ÀÌÅÍ ³Ö±â
+SQL> --³ÖÀ» ¶§´Â insert ¹®À» ¾´´Ù
+SQL> ed
+Wrote file afiedt.buf
+
+  1  insert  into  pet(category, age, loc)
+  2* values('í˜¸ëž‘ì´', 5, 'ì¸ë„')
+SQL> ed
+Wrote file afiedt.buf
+
+  1  insert  into  pet(category, age, loc)
+  2* values('tiger', 5, 'india')
+SQL> /
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  insert  into  pet(category, age, loc)
+  2* values('tiger', 5, 'india')
+SQL> commit;
+
+Commit complete.
+
+SQL> -- Å×ÀÌºí Á¶È¸ÇÏ±â
+SQL> select category, age, loc from pet;
+
+CATEGORY                    AGE LOC                                             
+-------------------- ---------- --------------------                            
+tiger                         5 india                                           
+
+SQL> --°í¾çÀÌ ·¹ÄÚµå ³Ö±â
+SQL> insert into pet(category, age, loc)
+  2  values('cat', 4, 'korea');
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  insert into pet(category, age, loc)
+  2* values('dog', 2, 'america')
+SQL> /
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  insert into pet(category, age, loc)
+  2* values('horse', 3, 'africa')
+SQL> /
+
+1 row created.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> --4¸¶¸® ¸ðµÎ ÀÖ´ÂÁö Á¶È¸
+SQL> select category, age, loc from pet;
+
+CATEGORY                    AGE LOC                                             
+-------------------- ---------- --------------------                            
+tiger                         5 india                                           
+cat                           4 korea                                           
+dog                           2 america                                         
+horse                         3 africa                                          
+
+SQL> -- mysql°ú ¸¶Âù°¡Áö°í ANSIÇ¥ÁØ Äõ¸®¸¦ µû¸£¹Ç·Î
+SQL> -- SQL¹®ÀÌ µ¿ÀÏÇÏ´Ù
+SQL> delete from pet where category='dog';
+
+1 row deleted.
+
+SQL> select * from pet;
+
+CATEGORY                    AGE LOC                                             
+-------------------- ---------- --------------------                            
+tiger                         5 india                                           
+cat                           4 korea                                           
+horse                         3 africa                                          
+
+SQL> spool off
