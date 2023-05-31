@@ -1,0 +1,285 @@
+SQL> --현재 계정이 보유한 테이블 목록 조회학시
+SQL> ed
+Wrote file afiedt.buf
+
+  1* select  table_name  from user_table
+SQL> /
+select  table_name  from user_table
+                         *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* select  table_name  from user_tables
+SQL> /
+
+TABLE_NAME                                                                      
+------------------------------------------------------------                    
+PET                                                                             
+MEMBER                                                                          
+DEPT                                                                            
+EMP                                                                             
+
+SQL> --테이블 생성하기
+SQL> --SQL(데이터베이스만이 이해하는 언어)
+SQL> --SQL언어의 유형 (DDL, DCL, DML)
+SQL> --DDL(데이터베이스 정의어) 생,사, 변경
+SQL> --create , drop, alter
+SQL> --DCL(데이터베이스 제어어)
+SQL> --grant(권한부여), revoke (권한뺏기)
+SQL> --DML(데이터 조작어)
+SQL> --insert, delete, update
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create  table class(
+  2     name varchar2(20)
+  3    , age  number 
+  4* )
+SQL> /
+
+Table created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create  table class(
+  2     name varchar2(20)
+  3    , age  number 
+  4* )
+SQL> select * from class;
+
+no rows selected
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into class(name, age) values('zino',3)
+SQL> /
+
+1 row created.
+
+SQL> select * from class;
+
+NAME                                            AGE                             
+---------------------------------------- ----------                             
+zino                                              3                             
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into class(name, age) values('batman',5)
+SQL> /
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into class(name, age) values('zino',3)
+SQL> /
+
+1 row created.
+
+SQL> select * from class;
+
+NAME                                            AGE                             
+---------------------------------------- ----------                             
+zino                                              3                             
+batman                                            5                             
+zino                                              3                             
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  select * from class
+  2* where name='zino'
+SQL> /
+
+NAME                                            AGE                             
+---------------------------------------- ----------                             
+zino                                              3                             
+zino                                              3                             
+
+SQL> d
+SP2-0042: unknown command "d" - rest of line ignored.
+SQL> --우리가 방금 작성한 class 테이블을
+SQL> --아무런 제약사항을 부여하지 않았으므로
+SQL> --데이터의 중복을 허용해 버리고 말았따
+SQL> --따라서 결점이 없는 데이터를 유지하려면
+SQL> --테이블을 구성하는 각 컬럼들에 제한사항
+SQL> --을 적용할 수 잇는데, 이러한 조건을
+SQL> --가리켜 제약조건이라 하며 정식명칭은
+SQL> --constraint 라 한다.
+SQL> --제약조건의 종류
+SQL> --컬럼에 들어올 값들에 중복을 허용하지
+SQL> --않는 제약조건을 unique 라 한다
+SQL> delete from class;
+
+3 rows deleted.
+
+SQL> --DDL중 기존에 없던 컬럼을 추가하거나
+SQL> --컬럼을 제거, 변경하는 명령어은 alter
+SQL> ed
+Wrote file afiedt.buf
+
+  1  alter   table  class 
+  2* add  id varchar2(20) unique
+SQL> /
+
+Table altered.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into class(name, age, id) values('zino',3, 'zino1187')
+SQL> /
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into class(name, age, id) values('zino',3, 'zino1187')
+SQL> /
+insert into class(name, age, id) values('zino',3, 'zino1187')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (JAVA.SYS_C007019) violated 
+
+
+SQL> delete from class;
+
+1 row deleted.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  alter   table  class
+  2* add   hobby  varchar2(20) not null
+SQL> /
+
+Table altered.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into class(id) values('zino1187')
+SQL> /
+insert into class(id) values('zino1187')
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("JAVA"."CLASS"."HOBBY") 
+
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into class(hobby) values('swim')
+SQL> /
+
+1 row created.
+
+SQL> select * from class;
+
+NAME                                            AGE                             
+---------------------------------------- ----------                             
+ID                                                                              
+----------------------------------------                                        
+HOBBY                                                                           
+----------------------------------------                                        
+                                                                                
+                                                                                
+swim                                                                            
+                                                                                
+
+SQL> --테이블 제거 (drop--DDL)
+SQL> drop table class;
+
+Table dropped.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create   table  class(
+  2      id  varchar2(20) unique
+  3    , name varchar2(20) not null
+  4    , age  number 
+  5    , constraint  chk_class check( age >=18)
+  6* )
+SQL> /
+
+Table created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  insert into class(id , name ,age)
+  2* values('batman', 'zino', 17)
+SQL> /
+insert into class(id , name ,age)
+*
+ERROR at line 1:
+ORA-02290: check constraint (JAVA.CHK_CLASS) violated 
+
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  insert into class(id , name ,age)
+  2* values('batman', 'zino', 19)
+SQL> /
+
+1 row created.
+
+SQL> select * from class;
+
+ID                                                                              
+----------------------------------------                                        
+NAME                                            AGE                             
+---------------------------------------- ----------                             
+batman                                                                          
+zino                                             19                             
+                                                                                
+
+SQL> drop table class;
+
+Table dropped.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create  table  class(
+  2    id   varchar2(20)   unique
+  3   , name  varchar2(20)  not null 
+  4   , age  number 
+  5   , constraint  chk_class  check(age>=18)
+  6   , point  number  default  500
+  7* )
+SQL> /
+
+Table created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  insert  into class(id, name, age)
+  2* values('batman', 'zino', 18)
+SQL> /
+
+1 row created.
+
+SQL> select * from class;
+
+ID                                                                              
+----------------------------------------                                        
+NAME                                            AGE      POINT                  
+---------------------------------------- ---------- ----------                  
+batman                                                                          
+zino                                             18        500                  
+                                                                                
+
+SQL> spool off
