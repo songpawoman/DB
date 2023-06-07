@@ -1,3 +1,16 @@
+SQL> --constraint
+SQL> --결점이 없는 유효한 데이터 입력을 보장받기 위해
+SQL> --테이블에 적용하는 제한 사항을 제약조건이라 함
+SQL> --ANSI(미국표준협회) 표준 SQL, 제약조건
+SQL> --null을 허용하지 않음 not null
+SQL> --중복을 허용하지 않는 제약조건 unique
+SQL> --기본값 지정 default
+SQL> --지정한 조건만 받아들이는 제약조건 check
+SQL> --unique + not null = primary key
+SQL> --foreign key 외래키 제약조건
+SQL> --각종 제약 조건을 부여하여 테이블 생성하기
+SQL> --현재 계정에서 어떤 테이블을 생성햇는지
+SQL> --테이블 내역 조회
 SQL> select table_name from user_tables;
 
 TABLE_NAME                                                                      
