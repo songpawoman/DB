@@ -1,0 +1,115 @@
+SQL> select table_name from user_tables;
+
+TABLE_NAME                                                                      
+------------------------------------------------------------                    
+PET                                                                             
+MEMBER                                                                          
+DEPT                                                                            
+EMP                                                                             
+CLASS                                                                           
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create  table  member2(
+  2      name  varchar2(20) not null
+  3    , id varchar2(20)  unique 
+  4    , regdate  date  default  sysdate
+  5    , point  number  default  500  
+  6* )
+SQL> /
+
+Table created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert  into member2(name, id)  values('zino', 'zino1187')
+SQL> /
+
+1 row created.
+
+SQL> set line 400
+SQL> set pagesize 30
+SQL> select * from member2;
+
+NAME                                     ID                                       REGDATE       POINT                                                                                                                                                                                                                                                                                                           
+---------------------------------------- ---------------------------------------- -------- ----------                                                                                                                                                                                                                                                                                                           
+zino                                     zino1187                                 23/06/07        500                                                                                                                                                                                                                                                                                                           
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into member2(name , id)  values('zino', 'zino1187')
+SQL> /
+insert into member2(name , id)  values('zino', 'zino1187')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (JAVA.SYS_C007034) violated 
+
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into member2(name )  values('zino')
+SQL> /
+
+1 row created.
+
+SQL> select * from member2;
+
+NAME                                     ID                                       REGDATE       POINT                                                                                                                                                                                                                                                                                                           
+---------------------------------------- ---------------------------------------- -------- ----------                                                                                                                                                                                                                                                                                                           
+zino                                     zino1187                                 23/06/07        500                                                                                                                                                                                                                                                                                                           
+zino                                                                              23/06/07        500                                                                                                                                                                                                                                                                                                           
+
+SQL> insert into member2(name )  values('zino');
+
+1 row created.
+
+SQL> select * from member2;
+
+NAME                                     ID                                       REGDATE       POINT                                                                                                                                                                                                                                                                                                           
+---------------------------------------- ---------------------------------------- -------- ----------                                                                                                                                                                                                                                                                                                           
+zino                                     zino1187                                 23/06/07        500                                                                                                                                                                                                                                                                                                           
+zino                                                                              23/06/07        500                                                                                                                                                                                                                                                                                                           
+zino                                                                              23/06/07        500                                                                                                                                                                                                                                                                                                           
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create    table   member3(
+  2      id varchar2(20)  primary key
+  3     , name  varchar2(20)
+  4* )
+SQL> /
+
+Table created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into member3(id, name) values('zino1187', 'zino')
+SQL> /
+
+1 row created.
+
+SQL> /
+insert into member3(id, name) values('zino1187', 'zino')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (JAVA.SYS_C007035) violated 
+
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into member3(name) values('zino')
+SQL> /
+insert into member3(name) values('zino')
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("JAVA"."MEMBER3"."ID") 
+
+
+SQL> spool off
